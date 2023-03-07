@@ -6,4 +6,4 @@ Web-interface for implementation of robot control.
 2. cd LogBot
 3. composer install
 4. git checkout -b branch-name
-5. do some code :)
+5. do some code
