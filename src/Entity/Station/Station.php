@@ -16,7 +16,7 @@ class Station
     private int $id;
 
     #[ORM\Column (type: 'integer', unique:true)]
-    public int $station_num;
+    public int $station_id;
 
     #[ORM\Column (type: 'string', nullable: false)]
     public string $name;
