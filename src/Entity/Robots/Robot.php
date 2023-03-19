@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\Types\Boolean;
 use App\Entity\Requests\Request;
 use App\Entity\User\User;
+use App\Entity\Stations\Station;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -59,12 +60,17 @@ class Robot{
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "robotBoss")]
     private $robotBossId;
 
-    public function getRobotId(): ?User
+    public function getRobotBossId(): ?User
     {
         return $this->robotBossId;
     }
 
+    public function setRobotBossId(?User $user): self
+    {
+        $this->robotBossId = $user;
 
+        return $this;
+    }
 
     public function getId(): ?int{
         return $this->id;

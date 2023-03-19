@@ -14,12 +14,6 @@ use App\Entity\Requests\Request;
 class Station 
 { 
 
-    public function __construct()
-    {
-        $this->station1 = new ArrayCollection();
-        $this->station2 = new ArrayCollection();
-    }
-
     #[ORM\Id]
     #[ORM\Column (type: "integer")]
     #[ORM\GeneratedValue (strategy: "AUTO")]
@@ -29,12 +23,19 @@ class Station
     public string $name;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "stationBossId")]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private $stationsBoss;
 
-    public function getUserBoss(): ?User
+    public function getStationBoss(): ?User
     {
         return $this->stationsBoss;
+    }
+
+    public function setStationBoss(?User $user): self
+    {
+        $this->stationsBoss = $user;
+
+        return $this;
     }
 
     #[ORM\OneToMany(targetEntity: Request::class, mappedBy: "whereTo")]
@@ -60,12 +61,13 @@ class Station
         return $this->station2;
     }
 
-    public function setWhitherRequest(?Request $request): self
+    public function setWhitherRequest(?Station $station): self
     {
-        $this->station2 = $request;
+        $this->station2 = $station;
 
         return $this;
     }
+
 
     public function getId(): ?int
     {
