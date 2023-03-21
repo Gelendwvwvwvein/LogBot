@@ -8,8 +8,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\User\User;
 use App\Entity\Requests\Request;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Put;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource]
+#[ApiResource(operations:[
+    new Get(),
+    new Post (denormalizationContext: ['groups' => 'createStation']),
+    new GetCollection(),
+    new Delete(),
+    new Put()
+])]
 #[ORM\Entity]
 class Station 
 { 
@@ -20,6 +32,7 @@ class Station
     private int $id;
 
     #[ORM\Column (type: 'text', nullable: false)]
+    #[Groups('createStation')]
     public string $name;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "stationBossId")]

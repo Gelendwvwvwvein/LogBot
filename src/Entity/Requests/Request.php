@@ -9,9 +9,19 @@ use Doctrine\Common\Collections\Collection;
 use App\Entity\User\User;
 use App\Entity\Stations\Station;
 use App\Entity\Robots\Robot;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Put;
 
-#[ApiResource]
-
+#[ApiResource(operations:[
+    new Get(),
+    new Post (),
+    new GetCollection(),
+    new Delete(),
+    new Put()
+])]
 #[ORM\Entity]
 class Request 
 { 

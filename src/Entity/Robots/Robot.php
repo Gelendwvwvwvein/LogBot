@@ -9,8 +9,20 @@ use App\Entity\User\User;
 use App\Entity\Stations\Station;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Put;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource] 
+#[ApiResource(operations:[
+    new Get(),
+    new Post (denormalizationContext: ['groups' => 'createRobot']),
+    new GetCollection(),
+    new Delete(),
+    new Put()
+])] 
 #[ORM\Entity]
 class Robot{
 
@@ -31,15 +43,19 @@ class Robot{
      private int $id;
 
     #[ORM\Column(type: "text")]
+    #[Groups('createRobot')]
     private string $location;
 
     #[ORM\Column(type:"string", length: 255)]
+    #[Groups('createRobot')]
     private string $charge;
 
     #[ORM\Column(type: "integer")]
+    #[Groups('createRobot')]
     private int $status;
 
     #[ORM\Column(type: "integer")]
+    #[Groups('createRobot')]
     private int $en_dis;
 
     #[ORM\OneToMany(targetEntity: Request::class, mappedBy: "robot_id")]
