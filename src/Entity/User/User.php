@@ -3,6 +3,11 @@
 namespace App\Entity\User;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,8 +16,15 @@ use App\Entity\Requests\Request;
 use App\Entity\Robots\Robot;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource]
+#[ApiResource(operations:[
+    new Get(),
+    new Post (denormalizationContext: ['groups' => 'createUser']),
+    new GetCollection(),
+    new Delete(),
+    new Put()
+])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
 {
@@ -35,21 +47,27 @@ class User
     private int $id;
 
     #[ORM\Column(type: Types::TEXT, nullable: false)]
+    #[Groups('createUser')]
     public string $name;
 
     #[ORM\Column(type: Types::TEXT, nullable: false)]
+    #[Groups('createUser')]
     public string $surname;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups('createUser')]
     public ?string $patronymic = null;
 
     #[ORM\Column(length: 15, nullable: false)]
+    #[Groups('createUser')]
     private string $login;
 
     #[ORM\Column(nullable: false)]
+    #[Groups('createUser')]
     private string $password;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups('createUser')]
     public int $roles;
 
     #[ORM\OneToMany(targetEntity: Station::class, mappedBy: "stationsBoss")]

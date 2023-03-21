@@ -8,17 +8,23 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\User\User;
 use App\Entity\Requests\Request;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Put;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource]
+#[ApiResource(operations:[
+    new Get(),
+    new Post (denormalizationContext: ['groups' => 'createStation']),
+    new GetCollection(),
+    new Delete(),
+    new Put()
+])]
 #[ORM\Entity]
 class Station 
 { 
-
-    public function __construct()
-    {
-        $this->station1 = new ArrayCollection();
-        $this->station2 = new ArrayCollection();
-    }
 
     #[ORM\Id]
     #[ORM\Column (type: "integer")]
@@ -26,15 +32,23 @@ class Station
     private int $id;
 
     #[ORM\Column (type: 'text', nullable: false)]
+    #[Groups('createStation')]
     public string $name;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "stationBossId")]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private $stationsBoss;
 
-    public function getUserBoss(): ?User
+    public function getStationBoss(): ?User
     {
         return $this->stationsBoss;
+    }
+
+    public function setStationBoss(?User $user): self
+    {
+        $this->stationsBoss = $user;
+
+        return $this;
     }
 
     #[ORM\OneToMany(targetEntity: Request::class, mappedBy: "whereTo")]
@@ -60,12 +74,13 @@ class Station
         return $this->station2;
     }
 
-    public function setWhitherRequest(?Request $request): self
+    public function setWhitherRequest(?Station $station): self
     {
-        $this->station2 = $request;
+        $this->station2 = $station;
 
         return $this;
     }
+
 
     public function getId(): ?int
     {
