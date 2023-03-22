@@ -23,14 +23,13 @@ use ApiPlatform\Metadata\Put;
     new Put()
 ])]
 #[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Request 
 { 
     public const REQUEST_STATUS_ON_CONFIRMATION = 0;
     public const REQUEST_STATUS_CONFIRMED = 1;
     public const REQUEST_STATUS_IN_PROCESS = 2;
     public const REQUEST_STATUS_DONE = 3;
-
-    use Timestamps;
 
     #[ORM\Id]
     #[ORM\Column (type: "integer")]
@@ -42,6 +41,9 @@ class Request
 
     #[ORM\ManyToOne(targetEntity: Robot::class, inversedBy: "robot")]
     private $robot_id;
+
+    #[ORM\Column (type: "datetime")]
+    private $createdAt;
 
     public function getRobotId(): ?Robot
     {
@@ -114,6 +116,8 @@ class Request
 
         return $this;
     }
+
+    use Timestamps;
 
     public function getId(): ?int
     {
