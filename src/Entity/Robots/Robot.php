@@ -3,7 +3,6 @@ namespace App\Entity\Robots;
 
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Boolean;
 use App\Entity\Requests\Request;
 use App\Entity\User\User;
 use Doctrine\Common\Collections\Collection;
@@ -29,7 +28,7 @@ class Robot{
      #[ORM\GeneratedValue (strategy: 'AUTO')]
      private int $id;
 
-    #[ORM\Column(type: "text")]
+     #[ORM\Column(type: "text")]
     private string $location;
 
     #[ORM\Column(type:"string", length: 255)]
@@ -39,7 +38,7 @@ class Robot{
     private int $status;
 
     #[ORM\Column(type: "integer")]
-    private int $en_dis;
+    private int $enabled;
 
     #[ORM\OneToMany(targetEntity: Request::class, mappedBy: "robot_id")]
     private $robot;
@@ -91,12 +90,12 @@ class Robot{
         $this->status = $status;
         return $this;
     }
-    public function getEnDis(): ?int{
-        return $this->en_dis;
+    public function getEnabled(): ?int{
+        return $this->enabled;
     }
 
-    public function setEnDis(int $en_dis): self{
-        $this->en_dis = $en_dis;
+    public function setEnabled(int $enabled): self{
+        $this->enabled = $enabled;
         return $this;
     }
 }

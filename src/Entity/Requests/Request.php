@@ -4,8 +4,6 @@ namespace App\Entity\Requests;
 
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use App\Entity\User\User;
 use App\Entity\Stations\Station;
 use App\Entity\Robots\Robot;
@@ -54,7 +52,7 @@ class Request
         return $this->users_sender;
     }
 
-    #[ORM\ManyToOne(targetEntity: Station::class, inversedBy: "station1")]
+    #[ORM\ManyToOne(targetEntity: Station::class, inversedBy: "stationDeparture")]
     private $whereTo;
 
     public function getWhereTo(): ?Station
@@ -62,7 +60,7 @@ class Request
         return $this->whereTo;
     }
 
-    #[ORM\ManyToOne(targetEntity: Station::class, inversedBy: "station2")]
+    #[ORM\ManyToOne(targetEntity: Station::class, inversedBy: "stationArrive")]
     private $whitherTo;
 
     public function getWhitherTo(): ?Station

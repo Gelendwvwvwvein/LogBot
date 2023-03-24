@@ -16,7 +16,7 @@ class Station
 
     public function __construct()
     {
-        $this->station1 = new ArrayCollection();
+        $this->stationArrive = new ArrayCollection();
         $this->station2 = new ArrayCollection();
     }
 
@@ -38,31 +38,31 @@ class Station
     }
 
     #[ORM\OneToMany(targetEntity: Request::class, mappedBy: "whereTo")]
-    private $station1;
+    private $stationDeparture;
 
     public function getWhereRequest(): Collection
     {
-        return $this->station1;
+        return $this->stationDepartureArrive;
     }
 
     public function setWhereRequest(?Request $request): self
     {
-        $this->station1 = $request;
+        $this->stationDeparture = $request;
 
         return $this;
     }
 
     #[ORM\OneToMany(targetEntity: Request::class, mappedBy: "whitherTo")]
-    private $station2;
+    private $stationArrive;
 
     public function getWhitherRequest(): Collection
     {
-        return $this->station2;
+        return $this->stationArrive;
     }
 
     public function setWhitherRequest(?Request $request): self
     {
-        $this->station2 = $request;
+        $this->stationArrive = $request;
 
         return $this;
     }
