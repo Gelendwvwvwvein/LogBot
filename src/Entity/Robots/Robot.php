@@ -17,11 +17,21 @@ use ApiPlatform\Metadata\Put;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(operations:[
-    new Get(),
-    new Post (denormalizationContext: ['groups' => 'createRobot']),
-    new GetCollection(),
-    new Delete(),
-    new Put()
+    new Get(
+        security: "is_granted('ROLE_ADMIN')"
+    ),
+    new Post (
+        denormalizationContext: ['groups' => 'createRobot'],
+        security: "is_granted('ROLE_ADMIN')"),
+    new GetCollection(
+        security: "is_granted('ROLE_USER')"
+    ),
+    new Delete(
+        security: "is_granted('ROLE_ADMIN')"
+    ),
+    new Put(
+        security: "is_granted('ROLE_ADMIN')"
+    )
 ])] 
 #[ORM\Entity]
 class Robot{
@@ -50,13 +60,13 @@ class Robot{
     #[Groups('createRobot')]
     private string $charge;
 
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column(type: "integer", nullable: true)]
     #[Groups('createRobot')]
     private int $status;
 
     #[ORM\Column(type: "integer")]
     #[Groups('createRobot')]
-    private int $en_dis;
+    public int $en_dis;
 
     #[ORM\OneToMany(targetEntity: Request::class, mappedBy: "robot_id")]
     private $robot;
@@ -111,14 +121,6 @@ class Robot{
     }
     public function setStatus(string $status): self{
         $this->status = $status;
-        return $this;
-    }
-    public function getEnDis(): ?int{
-        return $this->en_dis;
-    }
-
-    public function setEnDis(int $en_dis): self{
-        $this->en_dis = $en_dis;
         return $this;
     }
 }

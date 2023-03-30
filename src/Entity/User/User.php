@@ -9,6 +9,8 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
+use App\Controller\GetUserController;
+use App\Controller\RegistrationController;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Stations\Station;
@@ -17,28 +19,41 @@ use App\Entity\Robots\Robot;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ApiResource(operations:[
-    new Get(),
-    new Post (denormalizationContext: ['groups' => 'createUser']),
-    new GetCollection(),
-    new Delete(),
-    new Put()
-])]
+
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[ApiResource(operations:[
+    new Get(
+        uriTemplate: 'users/get-current/{id}',
+        controller: GetUserController::class,
+        security: "is_granted('ROLE_ADMIN')"
+    ),
+    new Post (
+        uriTemplate: 'user/authorize',
+        controller: RegistrationController::class,
+        denormalizationContext: ['groups' => 'createUser'],
+        security: "is_granted('ROLE_ADMIN')"
+    ),
+    new GetCollection(
+        security: "is_granted('ROLE_USER')"
+    ),
+    new Delete(
+        security: "is_granted('ROLE_ADMIN')"
+    ),
+    new Put(
+        security: "is_granted('ROLE_ADMIN')"
+    )
+])]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public const ROLE_ADMIN = 0;
-    public const ROLE_SUPERUSER = 1;
-    public const ROLE_USER = 2;
-
     public function __construct()
     {
         $this->stationBossId = new ArrayCollection();
         $this->robotBoss = new ArrayCollection();
         $this->destinations = new ArrayCollection();
         $this->sender = new ArrayCollection();
-
     }
 
     #[ORM\Id]
@@ -58,7 +73,7 @@ class User
     #[Groups('createUser')]
     public ?string $patronymic = null;
 
-    #[ORM\Column(length: 15, nullable: false)]
+    #[ORM\Column(nullable: false, unique: true)]
     #[Groups('createUser')]
     private string $login;
 
@@ -66,9 +81,8 @@ class User
     #[Groups('createUser')]
     private string $password;
 
-    #[ORM\Column(type: 'integer')]
-    #[Groups('createUser')]
-    public int $roles;
+    #[ORM\Column(type: 'json')]
+    private $roles = [];
 
     #[ORM\OneToMany(targetEntity: Station::class, mappedBy: "stationsBoss")]
     private $stationBossId;
@@ -148,7 +162,11 @@ class User
         return $this;
     }
 
-    public function getPassword(): ?string
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -160,10 +178,27 @@ class User
         return $this;
     }
 
-
-    public function getRoles(): int
+    public function getUserIdentifier(): string
     {
-        return $this->roles;
+        return (string) $this->login;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     /**
@@ -182,9 +217,6 @@ class User
     /**
      * Returns the identifier for this user (e.g. username or email address).
      */
-    public function getUserIdentifier(): string
-    {
-        return $this->id;
-    }
+
 
 }

@@ -16,11 +16,21 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Put;
 
 #[ApiResource(operations:[
-    new Get(),
-    new Post (),
-    new GetCollection(),
-    new Delete(),
-    new Put()
+    new Get(
+        security: "is_granted('ROLE_USER')"
+    ),
+    new Post (
+        security: "is_granted('ROLE_USER')"
+    ),
+    new GetCollection(
+        security: "is_granted('ROLE_USER')"
+    ),
+    new Delete(
+        security: "is_granted('ROLE_USER')"
+    ),
+    new Put(
+        security: "is_granted('ROLE_USER')"
+    )
 ])]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
@@ -44,6 +54,8 @@ class Request
 
     #[ORM\Column (type: "datetime")]
     private $createdAt;
+
+    use Timestamps;
 
     public function getRobotId(): ?Robot
     {
@@ -116,8 +128,6 @@ class Request
 
         return $this;
     }
-
-    use Timestamps;
 
     public function getId(): ?int
     {
