@@ -16,11 +16,21 @@ use ApiPlatform\Metadata\Put;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(operations:[
-    new Get(),
-    new Post (denormalizationContext: ['groups' => 'createStation']),
-    new GetCollection(),
-    new Delete(),
-    new Put()
+    new Get(
+        security: "is_granted('ROLE_USER')"
+    ),
+    new Post (
+        denormalizationContext: ['groups' => 'createStation'],
+        security: "is_granted('ROLE_ADMIN')"),
+    new GetCollection(
+        security: "is_granted('ROLE_USER')"
+    ),
+    new Delete(
+        security: "is_granted('ROLE_ADMIN')"
+    ),
+    new Put(
+        security: "is_granted('ROLE_ADMIN')"
+    )
 ])]
 #[ORM\Entity]
 class Station 

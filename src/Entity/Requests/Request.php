@@ -16,21 +16,30 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Put;
 
 #[ApiResource(operations:[
-    new Get(),
-    new Post (),
-    new GetCollection(),
-    new Delete(),
-    new Put()
+    new Get(
+        security: "is_granted('ROLE_USER')"
+    ),
+    new Post (
+        security: "is_granted('ROLE_USER')"
+    ),
+    new GetCollection(
+        security: "is_granted('ROLE_USER')"
+    ),
+    new Delete(
+        security: "is_granted('ROLE_USER')"
+    ),
+    new Put(
+        security: "is_granted('ROLE_USER')"
+    )
 ])]
 #[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Request 
 { 
     public const REQUEST_STATUS_ON_CONFIRMATION = 0;
     public const REQUEST_STATUS_CONFIRMED = 1;
     public const REQUEST_STATUS_IN_PROCESS = 2;
     public const REQUEST_STATUS_DONE = 3;
-
-    use Timestamps;
 
     #[ORM\Id]
     #[ORM\Column (type: "integer")]
@@ -42,6 +51,11 @@ class Request
 
     #[ORM\ManyToOne(targetEntity: Robot::class, inversedBy: "robot")]
     private $robot_id;
+
+    #[ORM\Column (type: "datetime")]
+    private $createdAt;
+
+    use Timestamps;
 
     public function getRobotId(): ?Robot
     {
