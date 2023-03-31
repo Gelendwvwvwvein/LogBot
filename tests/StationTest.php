@@ -3,19 +3,22 @@
 namespace App\Tests;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use Zenstruck\Foundry\Test\Factories;
 use App\Factory\Stations\StationFactory;
 use App\Factory\User\UserFactory;
-use Zenstruck\Foundry\Test\Factories;
 
-class StationsTest extends ApiTestCase
+class StationTest extends ApiTestCase
 {
     use Factories;
 
     /** @test */
     public function GetStationsTest(): void
     {
-        UserFactory::createMany(5);
+        StationFactory::createMany(2, ['stationsBoss' => UserFactory::random()]);
 
-        StationFactory::createOne(['stationsBoss' => UserFactory::random()]);
+        static::createClient()->request('GET', '/stations');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseStatusCodeSame(200);
     }
 }

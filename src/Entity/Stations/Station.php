@@ -21,7 +21,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ),
     new Post (
         denormalizationContext: ['groups' => 'createStation'],
-        security: "is_granted('ROLE_ADMIN')"),
+        security: "is_granted('ROLE_ADMIN')"
+    ),
     new GetCollection(
         security: "is_granted('ROLE_USER')"
     ),
@@ -47,7 +48,7 @@ class Station
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "stationBossId")]
     #[ORM\JoinColumn(nullable: true)]
-    private $stationsBoss;
+    public $stationsBoss;
 
     public function getStationBoss(): ?User
     {
@@ -62,35 +63,34 @@ class Station
     }
 
     #[ORM\OneToMany(targetEntity: Request::class, mappedBy: "whereTo")]
-    private $station1;
+    private $stationWhere;
 
     public function getWhereRequest(): Collection
     {
-        return $this->station1;
+        return $this->stationWhere;
     }
 
     public function setWhereRequest(?Request $request): self
     {
-        $this->station1 = $request;
+        $this->stationWhere = $request;
 
         return $this;
     }
 
     #[ORM\OneToMany(targetEntity: Request::class, mappedBy: "whitherTo")]
-    private $station2;
+    private $stationWhither;
 
     public function getWhitherRequest(): Collection
     {
-        return $this->station2;
+        return $this->stationWhither;
     }
 
-    public function setWhitherRequest(?Station $station): self
+    public function setWhitherRequest(?Request $request): self
     {
-        $this->station2 = $station;
+        $this->stationWhither = $request;
 
         return $this;
     }
-
 
     public function getId(): ?int
     {
