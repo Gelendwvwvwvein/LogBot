@@ -50,7 +50,7 @@ class Request
     public int $requestStatus;
 
     #[ORM\ManyToOne(targetEntity: Robot::class, inversedBy: "robot")]
-    private $robot_id;
+    private $robotId;
 
     #[ORM\Column (type: "datetime")]
     private $createdAt;
@@ -59,12 +59,12 @@ class Request
 
     public function getRobotId(): ?Robot
     {
-        return $this->robot_id;
+        return $this->robotId;
     }
 
-    public function setRobotId(?Robot $robot): self
+    public function setRobotId(?Robot $robotNumber): self
     {
-        $this->robot_id = $robot;
+        $this->robotId = $robotNumber;
 
         return $this;
     }
@@ -99,7 +99,7 @@ class Request
         return $this;
     }
 
-    #[ORM\ManyToOne(targetEntity: Station::class, inversedBy: "station1")]
+    #[ORM\ManyToOne(targetEntity: Station::class, inversedBy: "stationWhere")]
     private $whereTo;
 
     public function getWhereTo(): ?Station

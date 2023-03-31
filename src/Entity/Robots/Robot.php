@@ -22,7 +22,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ),
     new Post (
         denormalizationContext: ['groups' => 'createRobot'],
-        security: "is_granted('ROLE_ADMIN')"),
+        security: "is_granted('ROLE_ADMIN')"
+    ),
     new GetCollection(
         security: "is_granted('ROLE_USER')"
     ),
@@ -38,9 +39,8 @@ class Robot{
 
     public function __construct()
     {
-        $this->robot = new ArrayCollection();
+        $this->robotNumber = new ArrayCollection();
     }
-
     
     public const ROBOT_STATUS_ON_CONFIRMATION = 0;
     public const ROBOT_STATUS_CONFIRMED = 1;
@@ -66,19 +66,19 @@ class Robot{
 
     #[ORM\Column(type: "integer")]
     #[Groups('createRobot')]
-    public int $en_dis;
+    public int $enabled;
 
-    #[ORM\OneToMany(targetEntity: Request::class, mappedBy: "robot_id")]
-    private $robot;
+    #[ORM\OneToMany(targetEntity: Request::class, mappedBy: "robotId")]
+    private $robotNumber;
 
     public function getRobot(): Collection
     {
-        return $this->robot;
+        return $this->robotNumber;
     }
 
     public function setRobot(?Request $request): self
     {
-        $this->robot = $request;
+        $this->robotNumber = $request;
 
         return $this;
     }

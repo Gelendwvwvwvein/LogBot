@@ -48,7 +48,7 @@ final class StationFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'name' => self::faker()->text(),
+            'name' => self::faker()->word(),
             'stationsBoss' => StationFactory::new()
         ];
     }
