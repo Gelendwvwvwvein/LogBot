@@ -5,7 +5,7 @@ Web-interface for implementation of robot control.
 
 Пост о роботе в тг: https://t.me/journal_RTC/1260
 
-тех.стек: Symphony, Python, MySQL
+тех.стек: Symphony, PHP, MySQL
 
 ТЗ проекта:
 [ТЗ умная тележка Бастион (1).pdf](https://github.com/Gelendwvwvwvein/LogBot/files/14025807/1.pdf)
